@@ -1,3 +1,2 @@
-## Data Science Project Template
+## Exercise Tracker Using Sensor Data
 
-You can use this template to structure your Python data science projects. It is based on [Cookie Cutter Data Science](https://drivendata.github.io/cookiecutter-data-science/).
