@@ -67,9 +67,9 @@ data_merged.columns = [
 
 # Resampling data (frequency conversion)
 sampling = {
+    "acc_x": "mean",
     "acc_y": "mean",
     "acc_z": "mean",
-    "acc_x": "mean",
     "gyr_x": "mean",
     "gyr_y": "mean",
     "gyr_z": "mean",
