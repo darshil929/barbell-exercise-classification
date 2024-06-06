@@ -61,4 +61,21 @@ for col in predictor_columns:
     df_lowpass = LowPass.low_pass_filter(df_lowpass, col, fs, cutoff, order=5)
     df_lowpass[col] = df_lowpass[col + "_lowpass"]
     del df_lowpass[col + "_lowpass"]
+    
+# Principal Component Analysis
+df_pca = df_lowpass.copy()
+PCA = PrincipalComponentAnalysis()
 
+pc_values = PCA.determine_pc_explained_variance(df_pca, predictor_columns)
+
+plt.figure(figsize=(10, 10))
+plt.plot(range(1, len(predictor_columns) + 1), pc_values)
+plt.xlabel("principal component number")
+plt.ylabel("explained variance")
+plt.show()
+
+df_pca = PCA.apply_pca(df_pca, predictor_columns, 3)
+
+subset = df_pca[df_pca["set"] == 45]
+
+subset[["pca_1", "pca_2", "pca_3"]].plot()
