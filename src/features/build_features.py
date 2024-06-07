@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from DataTransformation import LowPassFilter, PrincipalComponentAnalysis
+from TemporalAbstraction import NumericalAbstraction
 
 df = pd.read_pickle("../../data/interim/02_outliers_removed_chauvenet.pkl")
 
@@ -92,3 +93,31 @@ df_squared["gyr_r"] = np.sqrt(gyr_r)
 subset = df_squared[df_squared["set"] == 14]
 
 subset[["acc_r", "gyr_r"]].plot(subplots = True)
+
+# Performing temporal abstraction
+df_temporal = df_squared.copy()
+df_temporal.drop("duration", axis='columns', inplace=True)
+
+NumbAbs = NumericalAbstraction()
+
+predictor_columns = predictor_columns + ["acc_r", "gyr_r"]
+
+ws = int(1000 / 200)
+
+for col in predictor_columns:
+    df_temporal = NumbAbs.abstract_numerical(df_temporal, [col], ws, "mean")
+    df_temporal = NumbAbs.abstract_numerical(df_temporal, [col], ws, "std")
+    
+df_temporal_list = []
+for s in df_temporal["set"].unique():
+    subset = df_temporal[df_temporal["set"] == s].copy()
+    for col in predictor_columns:
+        subset = NumbAbs.abstract_numerical(subset, [col], ws, "mean")
+        subset = NumbAbs.abstract_numerical(subset, [col], ws, "std")
+    df_temporal_list.append(subset)
+    
+df_temporal = pd.concat(df_temporal_list)
+df_temporal.info()
+
+subset[["acc_y", "acc_y_temp_mean_ws_5", "acc_y_temp_std_ws_5"]].plot()
+subset[["gyr_y", "gyr_y_temp_mean_ws_5", "gyr_y_temp_std_ws_5"]].plot()
