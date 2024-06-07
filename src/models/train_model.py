@@ -7,7 +7,6 @@ import itertools
 from sklearn.metrics import accuracy_score, confusion_matrix
 from LearningAlgorithms import ClassificationAlgorithms
 
-
 # Plot settings
 plt.style.use("fivethirtyeight")
 plt.rcParams["figure.figsize"] = (20, 5)
@@ -61,15 +60,15 @@ selected_features, ordered_features, ordered_scores = learner.forward_selection(
 
 selected_features = [
     'pca_1',
-    'gyr_r_freq_0.0_Hz_ws_14',
-    'acc_x_freq_0.0_Hz_ws_14',
     'acc_z_freq_0.0_Hz_ws_14',
-    'acc_z_temp_mean_ws_5',
-    'gyr_r_freq_2.143_Hz_ws_14',
-    'gyr_x_freq_0.714_Hz_ws_14',
+    'acc_x_freq_0.0_Hz_ws_14',
+    'gyr_r_freq_0.0_Hz_ws_14',
+    'gyr_r_freq_2.5_Hz_ws_14',
+    'gyr_y_freq_0.357_Hz_ws_14',
+    'gyr_y_freq_2.5_Hz_ws_14',
     'gyr_r_max_freq',
-    'acc_r',
-    'gyr_z_freq_1.071_Hz_ws_14'
+    'gyr_z_freq_1.071_Hz_ws_14',
+    'gyr_x_max_freq'
 ]
 
 plt.figure(figsize=(10, 5))
@@ -100,6 +99,7 @@ feature_names = [
 iterations = 1
 score_df = pd.DataFrame()
 
+# Used scikit-learn version 1.2.1 to solve the issue with the gridsearch
 for i, f in zip(range(len(possible_feature_sets)), feature_names):
     print("Feature set:", i)
     selected_train_X = X_train[possible_feature_sets[i]]
