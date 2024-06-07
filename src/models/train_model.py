@@ -7,7 +7,6 @@ import itertools
 from sklearn.metrics import accuracy_score, confusion_matrix
 from LearningAlgorithms import ClassificationAlgorithms
 
-
 # Plot settings
 plt.style.use("fivethirtyeight")
 plt.rcParams["figure.figsize"] = (20, 5)
@@ -100,90 +99,57 @@ feature_names = [
 iterations = 1
 score_df = pd.DataFrame()
 
+# Loop over feature sets and feature names
 for i, f in zip(range(len(possible_feature_sets)), feature_names):
-    print("Feature set:", i)
+    print("Feature set:", f)
     selected_train_X = X_train[possible_feature_sets[i]]
     selected_test_X = X_test[possible_feature_sets[i]]
 
-    # First run non deterministic classifiers to average their score.
+    # First run non-deterministic classifiers to average their score
     performance_test_nn = 0
     performance_test_rf = 0
 
-    for it in range(0, iterations):
+    for it in range(iterations):
         print("\tTraining neural network,", it)
-        (
-            class_train_y,
-            class_test_y,
-            class_train_prob_y,
-            class_test_prob_y,
-        ) = learner.feedforward_neural_network(
-            selected_train_X,
-            y_train,
-            selected_test_X,
-            gridsearch=False,
-        )
-        performance_test_nn += accuracy_score(y_test, class_test_y)
+        nn_results = learner.feedforward_neural_network(selected_train_X, y_train, selected_test_X, gridsearch=False)
+        performance_test_nn += accuracy_score(y_test, nn_results[1])
 
         print("\tTraining random forest,", it)
-        (
-            class_train_y,
-            class_test_y,
-            class_train_prob_y,
-            class_test_prob_y,
-        ) = learner.random_forest(
-            selected_train_X, y_train, selected_test_X, gridsearch=True
-        )
-        performance_test_rf += accuracy_score(y_test, class_test_y)
+        rf_results = learner.random_forest(selected_train_X, y_train, selected_test_X, gridsearch=True)
+        performance_test_rf += accuracy_score(y_test, rf_results[1])
 
-    performance_test_nn = performance_test_nn / iterations
-    performance_test_rf = performance_test_rf / iterations
+    performance_test_nn /= iterations
+    performance_test_rf /= iterations
 
-    # And we run our deterministic classifiers:
+    # Run deterministic classifiers
     print("\tTraining KNN")
-    (
-        class_train_y,
-        class_test_y,
-        class_train_prob_y,
-        class_test_prob_y,
-    ) = learner.k_nearest_neighbor(
-        selected_train_X, y_train, selected_test_X, gridsearch=True
-    )
-    performance_test_knn = accuracy_score(y_test, class_test_y)
+    try:
+        knn_results = learner.k_nearest_neighbor(selected_train_X, y_train, selected_test_X, gridsearch=True)
+        performance_test_knn = accuracy_score(y_test, knn_results[1])
+    except AttributeError as e:
+        print(f"Error with KNN: {e}")
+        performance_test_knn = None  # Handle the error and continue
 
     print("\tTraining decision tree")
-    (
-        class_train_y,
-        class_test_y,
-        class_train_prob_y,
-        class_test_prob_y,
-    ) = learner.decision_tree(
-        selected_train_X, y_train, selected_test_X, gridsearch=True
-    )
-    performance_test_dt = accuracy_score(y_test, class_test_y)
+    dt_results = learner.decision_tree(selected_train_X, y_train, selected_test_X, gridsearch=True)
+    performance_test_dt = accuracy_score(y_test, dt_results[1])
 
     print("\tTraining naive bayes")
-    (
-        class_train_y,
-        class_test_y,
-        class_train_prob_y,
-        class_test_prob_y,
-    ) = learner.naive_bayes(selected_train_X, y_train, selected_test_X)
+    nb_results = learner.naive_bayes(selected_train_X, y_train, selected_test_X)
+    performance_test_nb = accuracy_score(y_test, nb_results[1])
 
-    performance_test_nb = accuracy_score(y_test, class_test_y)
-
-    # Save results to dataframe
+    # Save results to DataFrame
     models = ["NN", "RF", "KNN", "DT", "NB"]
-    new_scores = pd.DataFrame(
-        {
-            "model": models,
-            "feature_set": f,
-            "accuracy": [
-                performance_test_nn,
-                performance_test_rf,
-                performance_test_knn,
-                performance_test_dt,
-                performance_test_nb,
-            ],
-        }
-    )
-    score_df = pd.concat([score_df, new_scores])
+    accuracies = [
+        performance_test_nn,
+        performance_test_rf,
+        performance_test_knn,
+        performance_test_dt,
+        performance_test_nb,
+    ]
+    new_scores = pd.DataFrame({
+        "model": models,
+        "feature_set": f,
+        "accuracy": accuracies
+    })
+    score_df = pd.concat([score_df, new_scores], ignore_index=True)
