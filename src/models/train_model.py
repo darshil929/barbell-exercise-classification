@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import itertools
 from sklearn.metrics import accuracy_score, confusion_matrix
+from LearningAlgorithms import ClassificationAlgorithms
 
 
 # Plot settings
@@ -30,4 +31,50 @@ df_train["label"].value_counts().plot(
 y_train.value_counts().plot(kind="bar", ax=ax, color="dodgerblue", label="Train")
 y_test.value_counts().plot(kind="bar", ax=ax, color="royalblue", label="Test")
 plt.legend()
+plt.show()
+
+# Splitting features into subsets
+basic_features = ["acc_x", "acc_y", "acc_z", "gyr_x", "gyr_y", "gyr_z"]
+square_features = ["acc_r", "gyr_r"]
+pca_features = ["pca_1", "pca_2", "pca_3"]
+time_features = [f for f in df_train.columns if "_temp_" in f]
+freq_features = [f for f in df_train.columns if ("_freq" in f) or ("_pse" in f)]
+cluster_features = ["cluster"]
+
+print(f"Basic features: {len(basic_features)}")
+print(f"Square features: {len(square_features)}")
+print(f"PCA features: {len(pca_features)}")
+print(f"Time features: {len(time_features)}")
+print(f"Freq features: {len(freq_features)}")
+print(f"Cluster features: {len(cluster_features)}")
+
+feature_set_1 = list(set(basic_features))
+feature_set_2 = list(set(basic_features + square_features + pca_features))
+feature_set_3 = list(set(feature_set_2 + time_features))
+feature_set_4 = list(set(feature_set_3 + freq_features + cluster_features))
+
+# Performing forward feature selection using simple decision tree
+learner = ClassificationAlgorithms()
+
+max_features = 10
+selected_features, ordered_features, ordered_scores = learner.forward_selection(max_features, X_train, y_train)
+
+selected_features = [
+    'pca_1',
+    'gyr_r_freq_0.0_Hz_ws_14',
+    'acc_x_freq_0.0_Hz_ws_14',
+    'acc_z_freq_0.0_Hz_ws_14',
+    'acc_z_temp_mean_ws_5',
+    'gyr_r_freq_2.143_Hz_ws_14',
+    'gyr_x_freq_0.714_Hz_ws_14',
+    'gyr_r_max_freq',
+    'acc_r',
+    'gyr_z_freq_1.071_Hz_ws_14'
+]
+
+plt.figure(figsize=(10, 5))
+plt.plot(np.arange(1, max_features + 1, 1),ordered_scores)
+plt.xlabel("Number of features")
+plt.ylabel("Accuracy")
+plt.xticks(np.arange(1, max_features + 1, 1))
 plt.show()
