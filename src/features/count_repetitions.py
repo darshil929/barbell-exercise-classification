@@ -105,3 +105,8 @@ for s in df["set"].unique():
     reps = count_reps(subset, cutoff=cutoff, column=column)
     
     rep_df.loc[rep_df["set"] == s, "reps_pred"] = reps
+    
+# Evaluating the results
+error = mean_absolute_error(rep_df["reps"], rep_df["reps_pred"]).round(2)
+
+rep_df.groupby(["label", "category"])[["reps", "reps_pred"]].mean().plot.bar()
