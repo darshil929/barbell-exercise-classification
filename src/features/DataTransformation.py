@@ -3,6 +3,7 @@ from scipy.signal import butter, lfilter, filtfilt
 import copy
 import pandas as pd
 
+
 # This class removes the high frequency data (that might be considered noise) from the data.
 # We can only apply this when we do not have missing values (i.e. NaN).
 class LowPassFilter:
@@ -31,7 +32,6 @@ class LowPassFilter:
 # Class for Principal Component Analysis. We can only apply this when we do not have missing values (i.e. NaN).
 # For this we have to impute these first, be aware of this.
 class PrincipalComponentAnalysis:
-
     pca = []
 
     def __init__(self):
@@ -41,15 +41,13 @@ class PrincipalComponentAnalysis:
         dt_norm = copy.deepcopy(data_table)
         for col in columns:
             dt_norm[col] = (data_table[col] - data_table[col].mean()) / (
-                data_table[col].max()
-                - data_table[col].min()
+                data_table[col].max() - data_table[col].min()
                 # data_table[col].std()
             )
         return dt_norm
 
     # Performing the PCA on the selected columns and return the explained variance.
     def determine_pc_explained_variance(self, data_table, cols):
-
         dt_norm = self.normalize_dataset(data_table, cols)
 
         self.pca = PCA(n_components=len(cols))
@@ -60,7 +58,6 @@ class PrincipalComponentAnalysis:
     # Applying a PCA given the number of components we have selected.
     # We add new pca columns.
     def apply_pca(self, data_table, cols, number_comp):
-
         dt_norm = self.normalize_dataset(data_table, cols)
 
         self.pca = PCA(n_components=number_comp)

@@ -12,8 +12,8 @@ import pandas as pd
 import numpy as np
 import copy
 
-class ClassificationAlgorithms:
 
+class ClassificationAlgorithms:
     # Forward selection for classification which selects a pre-defined number of features (max_features) that show the best accuracy. We assume a decision tree learning for this purpose, but this can easily be changed. It return the best features.
     def forward_selection(self, max_features, X_train, y_train):
         # Start with no features.
@@ -75,7 +75,6 @@ class ClassificationAlgorithms:
         gridsearch=True,
         print_model_details=False,
     ):
-
         if gridsearch:
             tuned_parameters = [
                 {
@@ -369,7 +368,6 @@ class ClassificationAlgorithms:
         print_model_details=False,
         gridsearch=True,
     ):
-
         if gridsearch:
             tuned_parameters = [
                 {

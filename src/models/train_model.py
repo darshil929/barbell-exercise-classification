@@ -21,7 +21,9 @@ df_train = df.drop(["participant", "category", "set"], axis=1)
 X = df_train.drop("label", axis=1)
 y = df_train["label"]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
 
 fig, ax = plt.subplots(figsize=(10, 5))
 df_train["label"].value_counts().plot(
@@ -56,23 +58,25 @@ feature_set_4 = list(set(feature_set_3 + freq_features + cluster_features))
 learner = ClassificationAlgorithms()
 
 max_features = 10
-selected_features, ordered_features, ordered_scores = learner.forward_selection(max_features, X_train, y_train)
+selected_features, ordered_features, ordered_scores = learner.forward_selection(
+    max_features, X_train, y_train
+)
 
 selected_features = [
-    'pca_1',
-    'acc_z_freq_0.0_Hz_ws_14',
-    'acc_x_freq_0.0_Hz_ws_14',
-    'gyr_r_freq_0.0_Hz_ws_14',
-    'gyr_r_freq_2.5_Hz_ws_14',
-    'gyr_y_freq_0.357_Hz_ws_14',
-    'gyr_y_freq_2.5_Hz_ws_14',
-    'gyr_r_max_freq',
-    'gyr_z_freq_1.071_Hz_ws_14',
-    'gyr_x_max_freq'
+    "pca_1",
+    "acc_z_freq_0.0_Hz_ws_14",
+    "acc_x_freq_0.0_Hz_ws_14",
+    "gyr_r_freq_0.0_Hz_ws_14",
+    "gyr_r_freq_2.5_Hz_ws_14",
+    "gyr_y_freq_0.357_Hz_ws_14",
+    "gyr_y_freq_2.5_Hz_ws_14",
+    "gyr_r_max_freq",
+    "gyr_z_freq_1.071_Hz_ws_14",
+    "gyr_x_max_freq",
 ]
 
 plt.figure(figsize=(10, 5))
-plt.plot(np.arange(1, max_features + 1, 1),ordered_scores)
+plt.plot(np.arange(1, max_features + 1, 1), ordered_scores)
 plt.xlabel("Number of features")
 plt.ylabel("Accuracy")
 plt.xticks(np.arange(1, max_features + 1, 1))
@@ -85,7 +89,7 @@ possible_feature_sets = [
     feature_set_2,
     feature_set_3,
     feature_set_4,
-    selected_features
+    selected_features,
 ]
 
 feature_names = [
@@ -93,7 +97,7 @@ feature_names = [
     "Feature Set 2",
     "Feature Set 3",
     "Feature Set 4",
-    "Selected Features"
+    "Selected Features",
 ]
 
 iterations = 1

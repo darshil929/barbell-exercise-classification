@@ -1,8 +1,8 @@
 import numpy as np
 
+
 # This class performs a Fourier transformation on the data to find frequencies that occur often and filter noise
 class FourierTransformation:
-
     # Finds the amplitudes of the different frequencies using a fast fourier transformation
     # the sampling rate expresses the number of samples per second (i.e. Frequency is Hertz of the dataset)
     def find_fft_transformation(self, data, sampling_rate):
@@ -12,7 +12,6 @@ class FourierTransformation:
 
     # Gets frequencies over a certain window.
     def abstract_frequency(self, data_table, cols, window_size, sampling_rate):
-
         # Creates new columns for the frequency data.
         freqs = np.round((np.fft.rfftfreq(int(window_size)) * sampling_rate), 3)
 

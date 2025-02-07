@@ -1,9 +1,9 @@
 import numpy as np
 import scipy.stats as stats
 
+
 # Class to abstract a history of numerical values we can use as an attribute.
 class NumericalAbstraction:
-
     # This function aggregates a list of values using the specified aggregation
     # function (which can be 'mean', 'max', 'min', 'median', 'std')
     def aggregate_value(self, aggregation_function):
@@ -23,7 +23,6 @@ class NumericalAbstraction:
     # Abstract numerical columns specified given a window size (i.e. the number of time points from
     # the past considered) and an aggregation function.
     def abstract_numerical(self, data_table, cols, window_size, aggregation_function):
-
         # Create new columns for the temporal data, pass over the dataset and compute values
         for col in cols:
             data_table[
